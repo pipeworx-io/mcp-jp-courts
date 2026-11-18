@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.pipeworx-io/jp-courts",
+  "title": "Jp Courts",
+  "description": "jp-courts -- the Courts of Japan (裁判所) case-law database: judgments of the Supreme Court, the high…",
+  "version": "0.1.0",
+  "websiteUrl": "https://pipeworx.io/packs/jp-courts",
+  "repository": {
+    "url": "https://github.com/pipeworx-io/mcp-jp-courts",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://gateway.pipeworx.io/jp-courts/mcp"
+    }
+  ]
+}

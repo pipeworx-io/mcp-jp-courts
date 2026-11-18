@@ -1,0 +1,75 @@
+[
+  {
+    "name": "jp_court_search",
+    "description": "Search the Courts of Japan (裁判所) judgments database: Supreme Court, high court, lower court, administrative, labour and Intellectual Property High Court decisions. Japanese full-text query; each hit gives the case number (e.g. 平成30(受)1961), case name, decision date, court, the court's detail lines and the link to the full text. Words separated by spaces match decisions containing ANY of them; use must_include to require further words; a search matching over 2,000 decisions is refused by the court (empty_reason too_many_results) so use specific terms. court narrows to one part of the database (supreme, high, lower, administrative, labor, ip; default all). Dates are YYYY-MM-DD, Showa era onward. Only some decisions are published, so no hit does not mean no such case. Example: query=\"ストックオプション\", court=\"supreme\".",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "Japanese words, separated by spaces (any word matches)."
+        },
+        "must_include": {
+          "type": "string",
+          "description": "Optional extra words the decision must also contain."
+        },
+        "court": {
+          "type": "string",
+          "enum": [
+            "all",
+            "supreme",
+            "high",
+            "lower",
+            "administrative",
+            "labor",
+            "ip"
+          ],
+          "description": "Part of the database: all (default), supreme, high, lower, administrative, labor, ip."
+        },
+        "date_from": {
+          "type": "string",
+          "description": "Earliest decision date, YYYY-MM-DD (1926-12-25 or later)."
+        },
+        "date_to": {
+          "type": "string",
+          "description": "Latest decision date, YYYY-MM-DD."
+        },
+        "limit": {
+          "type": "number",
+          "description": "Records returned from the page (1-30, default 10)."
+        },
+        "offset": {
+          "type": "number",
+          "description": "Result offset for the next page: use next_offset from the previous response (pages of 30)."
+        }
+      },
+      "required": [
+        "query"
+      ]
+    }
+  },
+  {
+    "name": "jp_court_get",
+    "description": "Fetch one decision from the Courts of Japan judgments database by the id jp_court_search returned (use get_id, e.g. \"89915-2\"; a bare record number such as \"89915\" also works, with extra page reads): the case number, name, date, court, the court's holding (判示事項) and summary (裁判要旨) where it gives them, every field on the record, and the judgment text read from the court's PDF. A scan with no readable text layer returns text null with empty_reason no_text_layer; an unknown id returns found false. Long judgments are returned in slices: max_chars (default 40,000) and offset, with next_offset when more remains. Parties appear as the court published them.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Record id from jp_court_search, e.g. \"89915\"."
+        },
+        "max_chars": {
+          "type": "number",
+          "description": "Characters of judgment text to return (1,000-200,000, default 40,000)."
+        },
+        "offset": {
+          "type": "number",
+          "description": "Character offset into the judgment text, for the next slice."
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  }
+]
